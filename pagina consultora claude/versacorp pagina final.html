@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VersaFlow — Digitalización para PyMEs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/coolvetica" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --px: clamp(1.5rem, 4vw, 4rem);
+      --accent: #fff;
+      --brand: rgb(216, 218, 147);
+      --brand-dark: rgb(165, 168, 112);
+      --muted: #9ca3af;
+      --border: rgba(255,255,255,0.12);
+      --card-bg: rgba(255,255,255,0.04);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Coolvetica', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ─── LIQUID GLASS ─── */
+    .liquid-glass {
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 20%,
+        rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+        rgba(255,255,255,0.1) 80%, rgba(255,255,255,0.3) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at left bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 25%, transparent 60%),
+        radial-gradient(circle at right top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 25%, transparent 60%);
+      z-index: 1;
+    }
+    .hero video.background-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.2);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .content-layer {
+      position: relative;
+      z-index: 2;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 0 var(--px);
+    }
+    .navbar-wrap { padding-top: 1.5rem; }
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0.75rem;
+      padding: 0.1rem 1rem;
+    }
+    .logo {
+      font-family: 'Coolvetica', sans-serif; font-size: 2rem; font-weight: 600; letter-spacing: -0.05em; }
+    .nav-logo img {
+      display: block;
+      height: 2.2rem;
+      width: auto;
+    }
+    .nav-links { display: none; gap: 2rem; list-style: none; }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+    .nav-links a {
+      color: #fff; text-decoration: none;
+      font-size: 1.3rem; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--brand); }
+    .btn-nav {
+      background: var(--brand); color: #000; border: none;
+      padding: 0.5rem 1.5rem; border-radius: 0.5rem;
+      font-size: 0.875rem; font-weight: 500; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: background 0.2s;
+    }
+    .btn-nav:hover { background: var(--brand-dark); color: #fff; }
+    .hero-body {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: clamp(3rem, 4vw, 4rem);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr;
+      align-items: end; gap: 2rem;
+    }
+    @media (min-width: 1024px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
+    h1 {
+      font-family: 'Coolvetica', sans-serif;
+      font-size: clamp(2.25rem, 5vw, 4.5rem);
+      font-weight: 400; letter-spacing: -0.04em;
+      line-height: 1.1; margin-bottom: 1rem;
+    }
+    h1 .line { display: block; }
+    h1 .char {
+      display: inline-block; opacity: 0;
+      transform: translateX(-18px);
+      transition: opacity 500ms ease-out, transform 500ms ease-out;
+    }
+    h1 .char.visible { opacity: 1; transform: translateX(0); }
+    .hero-sub {
+      color: #d1d5db;
+      font-size: clamp(1rem, 1.5vw, 1.125rem);
+      line-height: 1.6; margin-bottom: 1.25rem;
+      opacity: 0; transition: opacity 1000ms ease;
+    }
+    .btn-row {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      opacity: 0; transition: opacity 1000ms ease;
+    }
+    .btn-primary {
+      background: var(--brand); color: #000; border: none;
+      padding: 0.75rem 2rem; border-radius: 0.5rem;
+      font-weight: 500; font-size: 1rem; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--brand-dark); color: #fff; }
+    .btn-glass {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      padding: 0.75rem 2rem; border-radius: 0.5rem;
+      font-weight: 500; font-size: 1rem; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid rgba(216, 218, 147, 0.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .btn-glass:hover {
+      background: rgba(255,255,255,0.20);
+      color: #000;
+      border-color: rgba(216, 218, 147, 0.55);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+    .tag-wrap {
+      display: flex; align-items: flex-end; justify-content: flex-start;
+      opacity: 0; transition: opacity 1000ms ease;
+    }
+    @media (min-width: 1024px) { .tag-wrap { justify-content: flex-end; } }
+    .tag-card {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.75rem 1.5rem; border-radius: 0.75rem;
+      font-weight: 300;
+      font-size: clamp(1.125rem, 2vw, 1.5rem);
+      white-space: nowrap;
+    }
+
+    /* ─── SHARED SECTION STYLES ─── */
+    section.page-section {
+      padding: clamp(5rem, 8vw, 8rem) var(--px);
+    }
+    .section-label {
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Coolvetica', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; letter-spacing: -0.03em;
+      line-height: 1.15; margin-bottom: 1.25rem;
+      color: var(--brand);
+    }
+    .section-desc {
+      color: var(--muted); font-size: 1.05rem;
+      line-height: 1.7; max-width: 560px;
+    }
+    .section-header { margin-bottom: 3.5rem; }
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── SERVICIOS ─── */
+    #servicios { background: #000; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .service-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem 1.75rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .service-card:hover {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.07);
+    }
+    .service-icon {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      border-radius: 0.625rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; margin-bottom: 1.25rem;
+    }
+    .service-card h3 {
+      font-size: 1.1rem; font-weight: 500;
+      margin-bottom: 0.5rem; letter-spacing: -0.02em;
+    }
+    .service-card p {
+      color: var(--muted); font-size: 0.9rem; line-height: 1.6;
+    }
+
+    /* ─── EQUIPO ─── */
+    #equipo { background: #080808; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .team-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .team-card:hover { border-color: rgba(255,255,255,0.3); }
+    .avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; font-weight: 500;
+      margin: 0 auto 1.25rem;
+      letter-spacing: -0.02em;
+      overflow: hidden;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .team-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
+    .team-card .role { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.75rem; }
+    .team-card .bio { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+
+    /* ─── TESTIMONIOS ─── */
+    #testimonios { background: #000; }
+    .testimonios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .testi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem 1.75rem;
+      display: flex; flex-direction: column; gap: 1.25rem;
+      transition: border-color 0.3s;
+    }
+    .testi-card:hover { border-color: rgba(255,255,255,0.3); }
+    .stars { color: #fff; font-size: 0.85rem; letter-spacing: 2px; }
+    .testi-card blockquote {
+      color: #e5e7eb; font-size: 0.95rem;
+      line-height: 1.7; flex: 1;
+      font-style: italic;
+    }
+    .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 500; flex-shrink: 0;
+    }
+    .testi-author-name { font-size: 0.9rem; font-weight: 500; }
+    .testi-author-company { font-size: 0.8rem; color: var(--muted); }
+
+    /* ─── CONTACTO ─── */
+    #contacto { background: #080808; }
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    @media (min-width: 768px) {
+      .contact-wrap { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+    .contact-info p {
+      color: var(--muted); font-size: 1rem; line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .contact-detail {
+      display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem;
+    }
+    .contact-detail span {
+      color: var(--muted); font-size: 0.9rem; display: flex; gap: 0.5rem;
+    }
+    .contact-detail span strong { color: #fff; font-weight: 500; }
+    .contact-form {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-field label {
+      font-size: 0.8rem; color: var(--muted); font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: #4b5563; }
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus { border-color: rgba(255,255,255,0.4); }
+    .form-field select option { background: #111; }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+    .btn-submit {
+      background: var(--brand); color: #000; border: none;
+      padding: 0.875rem 2rem; border-radius: 0.5rem;
+      font-size: 1rem; font-weight: 500; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s; margin-top: 0.5rem;
+      align-self: flex-start;
+    }
+    .btn-submit:hover { background: var(--brand-dark); color: #fff; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2.5rem var(--px);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    footer .logo {
+      font-family: 'Coolvetica', sans-serif; font-size: 1.25rem; }
+    footer p { color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <!-- Cambia el nombre del archivo de video aquí -->
+  <video class="background-video" autoplay muted loop playsinline src="img/video_fondo_hero.mp4"></video>
+  <div class="content-layer">
+    <div class="navbar-wrap">
+      <nav class="liquid-glass">
+        <span class="logo nav-logo"><img src="img/versaflow3_rectangular.png" alt="VersaFlow logo" style="width: 150px; height: auto;"></span>
+        <ul class="nav-links">
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#equipo">Equipo</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <button class="btn-nav" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Consultá ahora</button>
+      </nav>
+    </div>
+    <div class="hero-body">
+      <div class="hero-grid">
+        <div>
+          <h1 id="heading"></h1>
+          <p class="hero-sub" id="sub">Llevamos tu PyME al siguiente nivel con herramientas digitales a medida: stock, clientes, reseñas y más.</p>
+          <div class="btn-row" id="btns">
+            <button class="btn-primary" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Consultá ahora</button>
+            <button class="btn-glass liquid-glass" onclick="document.getElementById('servicios').scrollIntoView({behavior:'smooth'})">Ver servicios</button>
+          </div>
+        </div>
+        <div class="tag-wrap" id="tag">
+          <div class="tag-card liquid-glass">
+            Gestión. Digitalización. Crecimiento.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICIOS ═══ -->
+<section class="page-section" id="servicios">
+  <div class="section-header reveal">
+    <p class="section-label">Lo que hacemos</p>
+    <h2 class="section-title">Soluciones digitales<br>para tu negocio</h2>
+    <p class="section-desc">Implementamos tecnología que simplifica la operación diaria de tu empresa, sin complicaciones técnicas.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">📦</div>
+      <h3>Gestión de Stock</h3>
+      <p>Control de inventario en tiempo real. Alertas de quiebre de stock, historial de movimientos y reportes automáticos.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">💬</div>
+      <h3>Consultas de Clientes</h3>
+      <p>Sistema centralizado de atención al cliente. Respondé consultas desde un solo lugar, sin perder ninguna.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">⭐</div>
+      <h3>Gestión de Reseñas</h3>
+      <p>Monitoreá y respondé reseñas en Google, Instagram y más. Mejorá tu reputación digital de forma consistente.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">📊</div>
+      <h3>Análisis de Datos</h3>
+      <p>Dashboards simples con métricas clave de tu negocio. Tomá decisiones basadas en datos, no en intuición.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🛒</div>
+      <h3>Tienda Online</h3>
+      <p>Configuración y gestión de tu canal de ventas digital integrado con tu stock y métodos de pago locales.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🤖</div>
+      <h3>Automatización</h3>
+      <p>Automatizamos tareas repetitivas: facturación, recordatorios, seguimiento de pedidos y comunicaciones.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ EQUIPO ═══ -->
+<section class="page-section" id="equipo">
+  <div class="section-header reveal">
+    <p class="section-label">Las personas detrás</p>
+    <h2 class="section-title">Nuestro equipo</h2>
+    <p class="section-desc">Un equipo multidisciplinario con experiencia en tecnología, negocios y diseño orientado a PyMEs.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="avatar">
+        <img src="img/dante.PNG" alt="Dante Luca Cillo">
+      </div>
+      <h3>Dante Luca Cillo</h3>
+      <p class="role">CEO & Fundador</p>
+      <p class="bio">10 años liderando proyectos de transformación digital en empresas de Argentina y Latam.</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="avatar">
+        <img src="img/fernando.PNG" alt="Fernando Orioli">
+      </div>
+      <h3>Fernando Orioli</h3>
+      <p class="role">Gerente de Marketing</p>
+      <p class="bio">Especialista en integraciones de sistemas ERP y soluciones cloud para negocios de escala media.</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="avatar">
+        <img src="img/agus.PNG" alt="Agustina Batalla">
+      </div>
+      <h3>Agustina Batalla</h3>
+      <p class="role">UX & Producto</p>
+      <p class="bio">Diseña experiencias digitales simples que los equipos adoptan sin necesidad de capacitación extensa.</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="avatar">
+        <img src="img/juan.PNG" alt="Juan Dasque">
+      </div>
+      <h3>Juan Dasque</h3>
+      <p class="role">Líder de Implementación</p>
+      <p class="bio">Acompaña a cada cliente desde el onboarding hasta que el sistema funciona de forma autónoma.</p>
+    </div>
+        <div class="team-card reveal">
+      <div class="avatar">
+        <img src="img/mica.PNG" alt="Micu Pi">
+      </div>
+      <h3>Micu Pi</h3>
+      <p class="role">Líder de Implementación</p>
+      <p class="bio">Acompaña a cada cliente desde el onboarding hasta que el sistema funciona de forma autónoma.</p>
+    </div>
+        <div class="team-card reveal">
+      <div class="avatar">
+        <img src="img/mauge.PNG" alt="Maria Eugenia Ortega Riego">
+      </div>
+      <h3>Maria Eugenia Ortega Riego</h3>
+      <p class="role">Líder de Implementación</p>
+      <p class="bio">Acompaña a cada cliente desde el onboarding hasta que el sistema funciona de forma autónoma.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ TESTIMONIOS ═══ -->
+<section class="page-section" id="testimonios">
+  <div class="section-header reveal">
+    <p class="section-label">Lo que dicen nuestros clientes</p>
+    <h2 class="section-title">Resultados reales<br>en PyMEs reales</h2>
+    <p class="section-desc">Empresas de distintos rubros que ya digitalizaron su operación con VersaFlow.</p>
+  </div>
+  <div class="testimonios-grid">
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Antes perdíamos ventas por no saber qué teníamos en depósito. Con VersaFlow implementamos el control de stock en dos semanas y los errores bajaron a cero."</blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar">CP</div>
+        <div>
+          <p class="testi-author-name">Carlos Pereyra</p>
+          <p class="testi-author-company">Ferretería El Tornillo, Córdoba</p>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Las consultas por Instagram nos desbordaban. Ahora tenemos todo centralizado y respondemos el doble de rápido. Los clientes lo notan."</blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar">AM</div>
+        <div>
+          <p class="testi-author-name">El Papá de Mica Pi</p>
+          <p class="testi-author-company">Indumentaria Roots, Mendoza</p>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Pensábamos que digitalizar era caro y complicado. VersaFlow nos demostró lo contrario. En un mes ya teníamos el dashboard funcionando."</blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar">RT</div>
+        <div>
+          <p class="testi-author-name">Ricardo Torres</p>
+          <p class="testi-author-company">Distribuidora Norte, Tucumán</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ CONTACTO ═══ -->
+<section class="page-section" id="contacto">
+  <div class="contact-wrap">
+    <div class="contact-info reveal">
+      <p class="section-label">Hablemos</p>
+      <h2 class="section-title">¿Listo para dar<br>el paso digital?</h2>
+      <p>Contanos en qué etapa está tu negocio y te armamos una propuesta a medida. Sin compromiso, sin tecnicismos.</p>
+      <div class="contact-detail">
+        <span>📧 <strong>hola@versaflow.com.ar</strong></span>
+        <span>📞 <strong>+54 911 4543-8973</strong></span>
+        <span>📍 <strong>Buenos Aires, Argentina</strong></span>
+      </div>
+    </div>
+    <div class="reveal">
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nombre</label>
+            <input type="text" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" placeholder="tucorreo@empresa.com" required />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Empresa</label>
+          <input type="text" placeholder="Nombre de tu negocio" />
+        </div>
+        <div class="form-field">
+          <label>¿Qué necesitás?</label>
+          <select>
+            <option value="" disabled selected>Seleccioná un servicio</option>
+            <option>Gestión de Stock</option>
+            <option>Consultas de Clientes</option>
+            <option>Gestión de Reseñas</option>
+            <option>Tienda Online</option>
+            <option>Automatización</option>
+            <option>No sé, quiero asesoramiento</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Mensaje</label>
+          <textarea placeholder="Contanos brevemente sobre tu negocio y qué querés mejorar..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="submit-btn">Enviar consulta →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <span class="logo">VersaFlow</span>
+  <p>© 2025 VersaFlow. Digitalización para PyMEs argentinas. Todos los derechos reservados. </p>
+</footer>
+
+<script>
+  /* ── Hero heading animation ── */
+  const lines = ["Transformá tu PyME", "con tecnología real."];
+  const charDelay = 30, initialDelay = 200;
+  const headingEl = document.getElementById("heading");
+  lines.forEach((line, lineIndex) => {
+    const lineSpan = document.createElement("span");
+    lineSpan.className = "line";
+    line.split("").forEach((char, charIndex) => {
+      const span = document.createElement("span");
+      span.className = "char";
+      span.textContent = char === " " ? "\u00A0" : char;
+      const delay = initialDelay
+        + lineIndex * lines[0].length * charDelay
+        + (lineIndex * line.length + charIndex) * charDelay;
+      setTimeout(() => span.classList.add("visible"), delay);
+      lineSpan.appendChild(span);
+    });
+    headingEl.appendChild(lineSpan);
+  });
+
+  function fadeIn(id, delay) {
+    setTimeout(() => { document.getElementById(id).style.opacity = "1"; }, delay);
+  }
+  fadeIn("sub", 800);
+  fadeIn("btns", 1200);
+  fadeIn("tag", 1400);
+
+  /* ── Scroll reveal ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const delay = entry.target.dataset.delay || 0;
+        setTimeout(() => entry.target.classList.add("visible"), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(".reveal").forEach((el, i) => {
+    el.dataset.delay = (i % 4) * 100;
+    observer.observe(el);
+  });
+
+  /* ── Contact form ── */
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById("submit-btn");
+    btn.textContent = "✓ Mensaje enviado";
+    btn.style.background = "#d1fae5";
+    btn.style.color = "#065f46";
+    btn.disabled = true;
+  }
+</script>
+</body>
+</html>
