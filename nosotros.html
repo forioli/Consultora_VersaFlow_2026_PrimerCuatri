@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VersaFlow — Nosotros</title>
+  <link rel="icon" type="image/png" href="img/versaflow2.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/coolvetica" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --px: clamp(1.5rem, 4vw, 4rem);
+      --accent: #fff;
+      --brand: rgb(216, 218, 147);
+      --brand-dark: rgb(165, 168, 112);
+      --muted: #9ca3af;
+      --border: rgba(255,255,255,0.12);
+      --card-bg: rgba(255,255,255,0.04);
+    }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'Coolvetica', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    body a { color: inherit; }
+    .liquid-glass {
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 20%,
+        rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+        rgba(255,255,255,0.1) 80%, rgba(255,255,255,0.3) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .page-section {
+      padding: clamp(5rem, 8vw, 8rem) var(--px);
+    }
+    .section-header { margin-bottom: 3.5rem; }
+    .section-title {
+      font-family: 'Coolvetica', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; letter-spacing: -0.03em;
+      line-height: 1.15; margin-bottom: 1.25rem;
+      color: var(--brand);
+    }
+    .section-label {
+      font-size: 1.3rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+    .section-desc,
+    .content-block p {
+      color: var(--muted); font-size: 1.4rem;
+      line-height: 1.8; margin-bottom: 1.5rem;
+    }
+    .content-block {
+      max-width: 860px;
+    }
+    .content-block h3 {
+      font-size: 1.7rem; font-weight: 500;
+      margin-top: 2rem; margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    .content-block ul {
+      padding-left: 1.25rem; margin-bottom: 1.5rem;
+      color: var(--muted);
+    }
+    .content-block li {
+      margin-bottom: 1rem; line-height: 1.4; font-size: 1.4rem
+    }
+    .btn-primary,
+    .btn-glass,
+    .btn-nav,
+    .btn-submit {
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .btn-glass,
+    .btn-nav {
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: #000;
+      border: none;
+      padding: 0.95rem 2rem;
+      border-radius: 1rem;
+      font-weight: 500;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      background: var(--brand-dark);
+      color: #fff;
+    }
+    .btn-glass {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      border: 1px solid rgba(216, 218, 147, 0.35);
+      border-radius: 0.75rem;
+      padding: 0.85rem 1.6rem;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .btn-nav {
+      background: var(--brand);
+      color: #000;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .btn-glass:hover { background: rgba(255,255,255,0.18); }
+    .btn-nav:hover { background: var(--brand-dark); color: #fff; }
+    .hero-video {
+      position: relative;
+      width: 100%;
+      min-height: clamp(36rem, 44vh, 58rem);
+      overflow: hidden;
+    }
+    .hero-video video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-video::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.72) 40%, rgba(0,0,0,0.88));
+      pointer-events: none;
+    }
+    .hero-overlay {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hero-content {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(2rem, 8vw, 6rem) var(--px) 4rem;
+    }
+    .hero-copy {
+      max-width: 760px;
+    }
+    .hero-copy .section-desc {
+      color: rgba(255,255,255,0.9);
+    }
+    .content-layer {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 0 var(--px);
+    }
+    .navbar-wrap { padding-top: 1.5rem; }
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0.75rem;
+      padding: 0.1rem 1rem;
+    }
+    .nav-logo img {
+      display: block;
+      height: 2.2rem;
+      width: auto;
+    }
+    .nav-links { display: none; gap: 2rem; list-style: none; }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.3rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--brand); }
+    .page-footer {
+      padding: 2rem var(--px);
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero-video">
+      <video autoplay muted loop playsinline src="img/video_institucional.mp4"></video>
+      <div class="hero-overlay">
+        <div class="content-layer">
+          <div class="navbar-wrap">
+            <nav class="liquid-glass">
+              <a href="index.html" class="logo nav-logo"><img src="img/versaflow3_rectangular.png" alt="VersaFlow logo" style="width: 150px; height: auto;"></a>
+              <ul class="nav-links">
+                <li><a href="nosotros.html">Nuestra Historia</a></li>
+                <li><a href="index.html#servicios">Servicios</a></li>
+                <li><a href="index.html#equipo">Equipo</a></li>
+                <li><a href="index.html#testimonios">Testimonios</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+              </ul>
+              <button class="btn-nav" onclick="window.location.href='index.html#contacto'">Consultá ahora</button>
+            </nav>
+          </div>
+          <div class="hero-content">
+            <div class="hero-copy">
+              <div class="section-header">
+                <p class="section-label">Nuestra Historia</p>
+                <h1 class="section-title">¿Quienes Somos?</h1>
+                <p class="section-desc">VersaFlow nació de una necesidad clara: reducir la brecha digital que separa a las PyMEs tradicionales de la eficiencia y la competitividad. Fundada por un equipo de seis estudiantes avanzados de Administración de Empresas y Negocios Digitales, la consultora surgió al observar cómo muchas empresas locales con operaciones manuales perdían terreno frente a un mercado en rápida digitalización.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="content-block">
+        <h3>Propósito Estratégico / Misión </h3>
+        <p>Transformar la operación de PyMEs y pequeñas organizaciones con baja madurez digital mediante la implementación de soluciones tecnológicas accesibles y personalizadas, optimizando sus procesos internos y fortaleciendo su competitividad en el entorno digital.</p>
+
+        <h3>Visión</h3>
+        <p>Posicionarse como la consultora referente y de mayor confianza en transformación digital para PyMEs tradicionales a nivel regional y nacional, reconocida por implementar soluciones efectivas y sostenibles que generen resultados tangibles en el corto plazo.</p>
+
+        <h3>Valores ⭐️</h3>
+        <ul>
+          <li><strong>Proximidad:</strong> Ofrecer atención cercana y presencial en GBA Norte (San Fernando, Tigre, San Isidro y Vicente López), construyendo relaciones de largo plazo y confianza con el cliente.</li>
+          <li><strong>Integralidad:</strong> Brindar un servicio completo que abarque el diagnóstico de procesos, la tecnologìa, la capacitación del equipo y la estrategia de marketing digital, todo en un único paquete.</li>
+          <li><strong>Enfoque Analítico:</strong> Utilizar una base de conocimiento en Business Intelligence y Analítica Web para la toma de decisiones, asegurando que la implementación tecnológica se traduzca en mejoras operativas medibles.</li>
+          <li><strong>Agilidad y Accesibilidad:</strong> Priorizar la implementación de soluciones funcionales con herramientas de bajo costo y rápida ejecución, adaptadas a los recursos y tiempos de las PyMEs.</li>
+        </ul>
+
+        <a class="btn-primary" href="index.html#contacto">Contactate con nosotros</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <span class="logo">VersaFlow</span>
+    <p>© 2025 VersaFlow. Digitalización para PyMEs argentinas. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
